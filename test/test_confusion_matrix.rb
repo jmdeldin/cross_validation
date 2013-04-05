@@ -1,31 +1,12 @@
 require_relative 'test_helper'
 require_relative '../lib/cross_validation/confusion_matrix'
 
-# A stupid classifier
-def classify(document)
-  tokens = document.split(' ')
-  tokens.include?('viagra') ? :spam : :ham
-end
-
-def keys_for(actual, expected)
-  if actual == :spam
-    expected == :spam ? :tp : :fn
-  elsif actual == :ham
-    expected == :ham ? :tn : :fp
-  end
-end
-
 class TestConfusionMatrix < MiniTest::Unit::TestCase
   def delta
     1e-6
   end
 
   def setup
-    tpl = ['Buy some...', 'Would you like some...']
-    @spam = tpl.map { |pfx| pfx + 'viagra!' }
-    @ham = tpl.map { |pfx| pfx + 'penicillin!' }
-    @corpus = @spam + @ham
-
     @mat = CrossValidation::ConfusionMatrix.new(method(:keys_for))
   end
 
