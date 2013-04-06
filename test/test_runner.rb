@@ -40,18 +40,23 @@ class TestRunner < MiniTest::Unit::TestCase
   end
 
   def test_run
-    mat = CrossValidation::Runner.run(:documents    => @corpus,
-                               :folds        => 10,
-                               :classifier   => lambda { SpamClassifier.new },
-                               :sample_klass => lambda { |sample| sample.klass },
-                               :sample_value => lambda { |sample| sample.value },
-                               :matrix       => CrossValidation::ConfusionMatrix.new(method(:keys_for)),
-                               :training     => lambda { |classifier, doc|
-                                 classifier.train doc.klass, doc.value
-                               },
-                               :classifying  => lambda { |classifier, doc|
-                                  classifier.classify doc
-                               })
+    runner = CrossValidation::Runner.create do |r|
+      r.documents = @corpus
+      r.folds = 10
+      r.classifier = lambda { SpamClassifier.new }
+      r.fetch_sample_class = lambda { |sample| sample.klass }
+      r.fetch_sample_value = lambda { |sample| sample.value }
+      r.matrix = CrossValidation::ConfusionMatrix.new(method(:keys_for))
+      r.training = lambda { |classifier, doc|
+        classifier.train doc.klass, doc.value
+      }
+      r.classifying = lambda { |classifier, doc|
+        classifier.classify doc
+      }
+    end
+
+    mat = CrossValidation::Runner.run(runner)
+
     assert_equal 50, mat.tp
     assert_equal 50, mat.tn
   end

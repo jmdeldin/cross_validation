@@ -55,14 +55,14 @@ module CrossValidation
     #   output confusion matrix
     #
     def self.run(options)
-      documents = options.fetch(:documents)
-      folds = options.fetch(:folds, 10)
-      classifier_proc = options.fetch(:classifier)
-      training_proc = options.fetch(:training)
-      classifying_proc = options.fetch(:classifying)
-      confusion = options.fetch(:matrix)
-      sample_klass = options.fetch(:sample_klass)
-      sample_value = options.fetch(:sample_value)
+      documents = options.documents
+      folds = options.folds
+      classifier_proc = options.classifier
+      training_proc = options.training
+      classifying_proc = options.classifying
+      confusion = options.matrix
+      sample_klass = options.fetch_sample_class
+      sample_value = options.fetch_sample_value
 
       k = documents.size / folds
       partitions = documents.each_slice(k).to_a
