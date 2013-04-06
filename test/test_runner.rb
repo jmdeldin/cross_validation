@@ -1,5 +1,6 @@
 require_relative 'test_helper'
 require_relative '../lib/cross_validation/confusion_matrix'
+require_relative '../lib/cross_validation/runner'
 
 # A stupid classifier
 class SpamClassifier
@@ -18,7 +19,7 @@ end
 # classifying closures.
 Sample = Struct.new(:klass, :value)
 
-class TestCrossValidation < MiniTest::Unit::TestCase
+class TestRunner < MiniTest::Unit::TestCase
   def setup
     tpl = ['Buy some...', 'Would you like some...']
     @spam = tpl.map { |pfx| Sample.new(:spam, pfx + 'viagra!') }
@@ -28,7 +29,7 @@ class TestCrossValidation < MiniTest::Unit::TestCase
   end
 
   def test_run
-    mat = CrossValidation::run(:documents    => @corpus,
+    mat = CrossValidation::Runner.run(:documents    => @corpus,
                                :folds        => 10,
                                :classifier   => lambda { SpamClassifier.new },
                                :sample_klass => lambda { |sample| sample.klass },
