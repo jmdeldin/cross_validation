@@ -1,5 +1,6 @@
 require_relative 'test_helper'
 require_relative '../lib/cross_validation/confusion_matrix'
+require_relative '../lib/cross_validation/sample'
 require_relative '../lib/cross_validation/runner'
 
 # A stupid classifier
@@ -13,11 +14,6 @@ class SpamClassifier
     document =~ /viagra/ ? :spam : :ham
   end
 end
-
-# We just need to associate a class with a value. Feel free to use whatever
-# data structure you like -- this is only used in user-defined training and
-# classifying closures.
-Sample = Struct.new(:klass, :value)
 
 # Asserts the DSL's getter and setters work.
 def check_dsl(attribute, value)
@@ -33,8 +29,8 @@ end
 class TestRunner < MiniTest::Unit::TestCase
   def setup
     tpl = ['Buy some...', 'Would you like some...']
-    @spam = tpl.map { |pfx| Sample.new(:spam, pfx + 'viagra!') }
-    @ham = tpl.map { |pfx| Sample.new(:ham, pfx + 'penicillin!') }
+    @spam = tpl.map { |pfx| CrossValidation::Sample.new(:spam, pfx + 'viagra!') }
+    @ham = tpl.map { |pfx| CrossValidation::Sample.new(:ham, pfx + 'penicillin!') }
     @corpus = @spam + @ham
     @corpus *= 25 # 100 is easier to deal with
   end
