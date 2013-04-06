@@ -1,7 +1,10 @@
 # CrossValidation
 
-This gem provides a cross-validation routine and confusion matrix for
-evaluating classifiers.
+[![Build Status](https://travis-ci.org/jmdeldin/cross_validation.png?branch=master)](https://travis-ci.org/jmdeldin/cross_validation)
+[![Code Climate](https://codeclimate.com/github/jmdeldin/cross_validation.png)](https://codeclimate.com/github/jmdeldin/cross_validation)
+
+This gem provides a k-fold cross-validation routine and confusion matrix
+for evaluating machine learning classifiers.
 
 ## Installation
 
