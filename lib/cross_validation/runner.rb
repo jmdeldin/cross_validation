@@ -15,10 +15,9 @@ module CrossValidation
     #                  Mutually exclusive with +percentage+.
     attr_accessor :folds
 
-    # @return [Fixnum] The number of folds to partition +documents+ into as a
-    #                  *percentage* of the documents. Mutually exclusive with
-    #                  +folds+.
-    # TODO: Implement
+    # @return [Float] The number of folds to partition +documents+ into as a
+    #                 *percentage* of the documents. Mutually exclusive with
+    #                 +folds+.
     attr_accessor :percentage
 
     # @return [ConfusionMatrix]
@@ -44,6 +43,13 @@ module CrossValidation
     #                document and should return the document's class.
     attr_accessor :fetch_sample_class
 
+    # Returns the number of folds to partition the documents into.
+    #
+    # @return [Fixnum]
+    def k
+      @k ||= percentage ? (documents.size * percentage) : folds
+    end
+
     # Performs k-fold cross-validation and returns a confusion matrix.
     #
     # The algorithm is as follows (Mitchell, 1997, p147):
@@ -56,7 +62,6 @@ module CrossValidation
     #   output confusion matrix
     #
     def run
-      k = documents.size / folds
       partitions = documents.each_slice(k).to_a
 
       results = partitions.map.with_index do |part, i|

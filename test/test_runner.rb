@@ -61,6 +61,16 @@ class TestRunner < MiniTest::Unit::TestCase
     assert_equal 50, mat.tn
   end
 
+  def test_percentage_takes_precedence_over_folds
+    runner = CrossValidation::Runner.create do |r|
+      r.documents = ['foo'] * 100
+      r.folds = 20
+      r.percentage = 0.1
+    end
+
+    assert_equal 10, runner.k
+  end
+
   [
    :documents,
    :folds,
