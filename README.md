@@ -4,7 +4,9 @@
 [![Code Climate](https://codeclimate.com/github/jmdeldin/cross_validation.png)](https://codeclimate.com/github/jmdeldin/cross_validation)
 
 This gem provides a k-fold cross-validation routine and confusion matrix
-for evaluating machine learning classifiers.
+for evaluating machine learning classifiers. See [below](#usage) for
+usage or jump to the
+[documentation](http://rubydoc.info/github/jmdeldin/cross_validation/frames).
 
 ## Installation
 
@@ -22,19 +24,49 @@ Or install it yourself as:
 
 ## Usage
 
-Cross-validation:
+To cross-validate your classifier, you need to configure a run as
+follows:
 
-Confusion-matrix:
+```ruby
+require 'cross_validation'
 
+runner = CrossValidation::Runner.create do |r|
+  r.documents = my_array_of_documents
+  r.folds = 10
+  # or if you'd rather test on 10%
+  # r.percentage = 0.1
+  r.classifier = lambda { SpamClassifier.new }
+  r.fetch_sample_class = lambda { |sample| sample.klass }
+  r.fetch_sample_value = lambda { |sample| sample.value }
+  r.matrix = CrossValidation::ConfusionMatrix.new(method(:keys_for))
+  r.training = lambda { |classifier, doc|
+    classifier.train doc.klass, doc.value
+  }
+  r.classifying = lambda { |classifier, doc|
+    classifier.classify doc
+  }
+end
+```
 
-## Contributing
+With the run configured, just invoke `#run` to return a confusion matrix:
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+```ruby
+mat = runner.run
+```
 
-## Questions
+With a confusion matrix in hand, you can compute many statistics about
+your classifier:
 
-Send me an email, `dev@jmdeldin.com`
+- `mat.accuracy`
+- `mat.f1`
+- `mat.fscore(beta)`
+- `mat.precision`
+- `mat.recall`
+
+Please see the
+[respective documentation](http://rubydoc.info/github/jmdeldin/cross_validation/CrossValidation/ConfusionMatrix)
+for each method for more details.
+
+## Author
+
+Jon-Michael Deldin, `dev@jmdeldin.com`
