@@ -9,9 +9,10 @@ Gem::Specification.new do |gem|
   gem.version       = CrossValidation::VERSION
   gem.authors       = ["Jon-Michael Deldin"]
   gem.email         = ["dev@jmdeldin.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.summary       = %q{Performs k-fold cross-validation on machine learning
+                      classifiers.}
+  gem.description   = gem.summary
+  gem.homepage      = 'https://github.com/jmdeldin/cross_validation'
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
