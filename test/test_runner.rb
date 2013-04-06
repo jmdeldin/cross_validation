@@ -55,7 +55,7 @@ class TestRunner < MiniTest::Unit::TestCase
       }
     end
 
-    mat = CrossValidation::Runner.run(runner)
+    mat = runner.run
 
     assert_equal 50, mat.tp
     assert_equal 50, mat.tn

@@ -30,7 +30,8 @@ module CrossValidation
     attr_accessor :training
 
     # @return [Proc] This receives a *trained* classifier and a test document.
-    #                It classifies the document.
+    #                It classifies the document. It's a +Proc+ because we
+    #                create a new one with each partition.
     attr_accessor :classifying
 
     # @return [Proc] This receives a document and should return its value,
@@ -54,16 +55,7 @@ module CrossValidation
     #     classify(partitions[i])
     #   output confusion matrix
     #
-    def self.run(options)
-      documents = options.documents
-      folds = options.folds
-      classifier_proc = options.classifier
-      training_proc = options.training
-      classifying_proc = options.classifying
-      confusion = options.matrix
-      sample_klass = options.fetch_sample_class
-      sample_value = options.fetch_sample_value
-
+    def run
       k = documents.size / folds
       partitions = documents.each_slice(k).to_a
 
@@ -72,22 +64,21 @@ module CrossValidation
         # then remove that element to get the training set. Array#drop does not
         # mutate the original array either. Array#flatten is needed to coalesce
         # our list of lists into one list again.
-        training = partitions.rotate(i).drop(1).flatten
+        training_samples = partitions.rotate(i).drop(1).flatten
 
-        # setup a new classifier
-        classifier = classifier_proc.call()
+        classifier_instance = classifier.call()
 
         # train it
-        training.each { |doc| training_proc.call(classifier, doc) }
+        training_samples.each { |doc| training.call(classifier_instance, doc) }
 
         # fetch confusion keys
         part.each do |x|
-          prediction = classifying_proc.call(classifier, sample_value.call(x))
-          confusion.store(prediction, sample_klass.call(x))
+          prediction = classifying.call(classifier_instance, fetch_sample_value.call(x))
+          matrix.store(prediction, fetch_sample_class.call(x))
         end
       end
 
-      confusion
+      matrix
     end
 
     # Configuring a cross-validation run is complicated. Let's make it easier
