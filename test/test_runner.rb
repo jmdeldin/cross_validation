@@ -19,6 +19,17 @@ end
 # classifying closures.
 Sample = Struct.new(:klass, :value)
 
+# Asserts the DSL's getter and setters work.
+def check_dsl(attribute, value)
+  runner = CrossValidation::Runner.create { |r|
+    r.public_send("#{attribute}=", :value)
+  }
+
+  define_method("test_#{attribute}_getter") {
+    assert_equal :value, runner.public_send(attribute)
+  }
+end
+
 class TestRunner < MiniTest::Unit::TestCase
   def setup
     tpl = ['Buy some...', 'Would you like some...']
@@ -43,5 +54,18 @@ class TestRunner < MiniTest::Unit::TestCase
                                })
     assert_equal 50, mat.tp
     assert_equal 50, mat.tn
+  end
+
+  [
+   :documents,
+   :folds,
+   :classifier,
+   :fetch_sample_value,
+   :fetch_sample_class,
+   :matrix,
+   :training,
+   :classifying,
+  ].each do |attribute|
+    check_dsl(attribute, :foo)
   end
 end

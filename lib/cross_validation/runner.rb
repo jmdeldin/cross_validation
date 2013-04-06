@@ -2,6 +2,47 @@ require_relative '../cross_validation'
 
 module CrossValidation
   class Runner
+    # @return [Array] Array of documents to train and test on. It can be an
+    #                 array of anything, as the +fetch_sample_value+ and
+    #                 +fetch_sample_class+ lambdas specify what to feed into
+    #                 the classifying method.
+    attr_accessor :documents
+
+    # @return [Proc] This instantiates your classifier.
+    attr_accessor :classifier
+
+    # @return [Fixnum] The number of folds to partition +documents+ into.
+    #                  Mutually exclusive with +percentage+.
+    attr_accessor :folds
+
+    # @return [Fixnum] The number of folds to partition +documents+ into as a
+    #                  *percentage* of the documents. Mutually exclusive with
+    #                  +folds+.
+    # TODO: Implement
+    attr_accessor :percentage
+
+    # @return [ConfusionMatrix]
+    attr_accessor :matrix
+
+    # @return [Proc] This receives an instantiated +classifier+ and a
+    #                document, and it should call your classifier's training
+    #                method.
+    attr_accessor :training
+
+    # @return [Proc] This receives a *trained* classifier and a test document.
+    #                It classifies the document.
+    attr_accessor :classifying
+
+    # @return [Proc] This receives a document and should return its value,
+    #                i.e., whatever you're feeding into +classifying+.
+    attr_accessor :fetch_sample_value
+
+    # @return [Proc] When verifying the results of executing the +classifying+
+    #                method, we need to determine what the actual class (e.g.,
+    #                spam) of the document was. This +Proc+ receives a
+    #                document and should return the document's class.
+    attr_accessor :fetch_sample_class
+
     # Performs k-fold cross-validation and returns a confusion matrix.
     #
     # The algorithm is as follows (Mitchell, 1997, p147):
@@ -13,7 +54,6 @@ module CrossValidation
     #     classify(partitions[i])
     #   output confusion matrix
     #
-    # k = number of folds as a percentage (e.g., 10 == 10% of data is used for testing)
     def self.run(options)
       documents = options.fetch(:documents)
       folds = options.fetch(:folds, 10)
@@ -48,6 +88,12 @@ module CrossValidation
       end
 
       confusion
+    end
+
+    # Configuring a cross-validation run is complicated. Let's make it easier
+    # with a factory method.
+    def self.create
+      new.tap { |r| yield(r) }
     end
   end
 end
