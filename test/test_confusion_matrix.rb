@@ -1,4 +1,5 @@
 require_relative 'test_helper'
+require_relative 'support/spam_classifier'
 require_relative '../lib/cross_validation/confusion_matrix'
 
 class TestConfusionMatrix < MiniTest::Unit::TestCase
@@ -7,7 +8,7 @@ class TestConfusionMatrix < MiniTest::Unit::TestCase
   end
 
   def setup
-    @mat = CrossValidation::ConfusionMatrix.new(method(:keys_for))
+    @mat = CrossValidation::ConfusionMatrix.new(SpamClassifier.method(:keys_for))
   end
 
   def test_true_positives

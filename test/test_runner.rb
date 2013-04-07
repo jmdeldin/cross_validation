@@ -1,19 +1,8 @@
 require_relative 'test_helper'
+require_relative 'support/spam_classifier'
 require_relative '../lib/cross_validation/confusion_matrix'
 require_relative '../lib/cross_validation/sample'
 require_relative '../lib/cross_validation/runner'
-
-# A stupid classifier
-class SpamClassifier
-  def train(klass, document)
-    # don't bother, we're that good (in reality, you should probably do some
-    # work here)
-  end
-
-  def classify(document)
-    document =~ /viagra/ ? :spam : :ham
-  end
-end
 
 # Asserts the DSL's getter and setters work.
 def check_dsl(attribute, value)
@@ -40,7 +29,7 @@ class TestRunner < MiniTest::Unit::TestCase
       r.documents = @corpus
       r.folds = 10
       r.classifier = lambda { SpamClassifier.new }
-      r.matrix = CrossValidation::ConfusionMatrix.new(method(:keys_for))
+      r.matrix = CrossValidation::ConfusionMatrix.new(SpamClassifier.method(:keys_for))
       r.training = lambda { |classifier, doc|
         classifier.train doc.klass, doc.value
       }
