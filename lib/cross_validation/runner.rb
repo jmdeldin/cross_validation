@@ -44,9 +44,15 @@ module CrossValidation
     #                document and should return the document's class.
     attr_accessor :fetch_sample_class
 
+    # @return [Array] Array of which attributes are empty
+    attr_reader :errors
+
     def initialize
       @fetch_sample_value = lambda { |sample| sample.value }
       @fetch_sample_class = lambda { |sample| sample.klass }
+
+      @critical_keys = [:documents, :classifier, :matrix, :training,
+                        :classifying, :fetch_sample_value, :fetch_sample_class]
     end
 
     # Returns the number of folds to partition the documents into.
@@ -60,11 +66,13 @@ module CrossValidation
     #
     # @return [Boolean]
     def valid?
-      [:documents, :classifier, :matrix, :training, :classifying].each do |x|
-        return false if public_send(x).nil?
+      @errors = []
+      @critical_keys.each do |k|
+        any_error = public_send(k).nil?
+        @errors << k if any_error
       end
 
-      true
+      @errors.size == 0
     end
 
     # @see #valid?
@@ -83,7 +91,11 @@ module CrossValidation
     #     classify(partitions[i])
     #   output confusion matrix
     #
+    # @raise [ArgumentError] if the runner is missing required attributes
+    # @return [ConfusionMatrix]
     def run
+      fail_if_invalid
+
       partitions = documents.each_slice(k).to_a
 
       results = partitions.map.with_index do |part, i|
@@ -112,6 +124,14 @@ module CrossValidation
     # with a factory method.
     def self.create
       new.tap { |r| yield(r) }
+    end
+
+    private
+
+    def fail_if_invalid
+      return nil if valid?
+      msg = "The following attribute(s) must be specified: #{errors.join(', ')}"
+      fail ArgumentError, msg
     end
   end
 end

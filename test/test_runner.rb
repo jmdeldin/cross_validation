@@ -70,4 +70,12 @@ class TestRunner < MiniTest::Unit::TestCase
   ].each do |attribute|
     check_dsl(attribute, :foo)
   end
+
+  def test_invalid_runner_raises_error
+    runner = CrossValidation::Runner.create {}
+    exception = assert_raises ArgumentError do
+      runner.run
+    end
+    assert_match(/must be specified/, exception.message)
+  end
 end
