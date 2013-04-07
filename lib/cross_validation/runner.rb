@@ -56,6 +56,22 @@ module CrossValidation
       @k ||= percentage ? (documents.size * percentage) : folds
     end
 
+    # Checks if all of the required run parameters are set.
+    #
+    # @return [Boolean]
+    def valid?
+      [:documents, :classifier, :matrix, :training, :classifying].each do |x|
+        return false if public_send(x).nil?
+      end
+
+      true
+    end
+
+    # @see #valid?
+    def invalid?
+      !valid?
+    end
+
     # Performs k-fold cross-validation and returns a confusion matrix.
     #
     # The algorithm is as follows (Mitchell, 1997, p147):

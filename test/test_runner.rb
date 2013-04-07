@@ -13,6 +13,10 @@ def check_dsl(attribute, value)
   define_method("test_#{attribute}_getter") {
     assert_equal :value, runner.public_send(attribute)
   }
+
+  define_method("test_runner_is_invalid_with_only_#{attribute}_set") {
+    assert runner.invalid?
+  }
 end
 
 class TestRunner < MiniTest::Unit::TestCase
