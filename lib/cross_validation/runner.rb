@@ -1,4 +1,5 @@
 require_relative '../cross_validation'
+require_relative 'sample'
 
 module CrossValidation
   class Runner
@@ -42,6 +43,11 @@ module CrossValidation
     #                spam) of the document was. This +Proc+ receives a
     #                document and should return the document's class.
     attr_accessor :fetch_sample_class
+
+    def initialize
+      @fetch_sample_value = lambda { |sample| sample.value }
+      @fetch_sample_class = lambda { |sample| sample.klass }
+    end
 
     # Returns the number of folds to partition the documents into.
     #

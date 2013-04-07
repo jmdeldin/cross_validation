@@ -40,8 +40,6 @@ class TestRunner < MiniTest::Unit::TestCase
       r.documents = @corpus
       r.folds = 10
       r.classifier = lambda { SpamClassifier.new }
-      r.fetch_sample_class = lambda { |sample| sample.klass }
-      r.fetch_sample_value = lambda { |sample| sample.value }
       r.matrix = CrossValidation::ConfusionMatrix.new(method(:keys_for))
       r.training = lambda { |classifier, doc|
         classifier.train doc.klass, doc.value
