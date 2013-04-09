@@ -83,6 +83,8 @@ module CrossValidation
     end
 
     # Returns the classifier's error
+    #
+    # @return [Float]
     def error
       1.0 - accuracy()
     end
