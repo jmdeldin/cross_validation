@@ -67,6 +67,46 @@ Please see the
 [respective documentation](http://rubydoc.info/github/jmdeldin/cross_validation/CrossValidation/ConfusionMatrix)
 for each method for more details.
 
+### Defining `keys_for`
+
+The ConfusionMatrix class requires a `keys_for` `Proc` that returns a
+symbol. In this method, you specify what constitutes a true positive
+(`:tp`), true negative (`:tn`), false positive (`:fp`), and false
+negative (`:fn`). For example, in spam classification, you can construct
+the following table to write the keys_for method:
+
+                            actual
+              +---------------------------------
+     expected | correct        | not correct
+    ----------+----------------+----------------
+     spam     | true positive  | false positive
+     ham      | true negative  | false negative
+
+You can then implement this table with nested hashes or just a few
+conditionals:
+
+```ruby
+def keys_for(expected, actual)
+  if expected == :spam
+    actual == :spam ? :tp : :fp
+  elsif expected == :ham
+    actual == :ham ? :tn : :fn
+  end
+end
+```
+
+Once you have your `keys_for` method implemented, pass it into the
+ConfusionMatrix with `method(:keys_for)`, or if it's a class-method,
+`MyClass.method(:keys_for)`. (You can also implement the method as a
+lambda.)
+
+## Roadmap
+
+For v1.0:
+
+- Implement configurable, parallel cross-validation
+- Include more complete examples
+
 ## Author
 
 Jon-Michael Deldin, `dev@jmdeldin.com`
