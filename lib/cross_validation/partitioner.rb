@@ -14,7 +14,7 @@ module CrossValidation
     # @raise [ArgumentError] if the length of the documents array is not
     #                        evenly divisible by k
     def self.subset(ary, k)
-      if ary.length % k != 0
+      if ary.length % k > 0
         fail ArgumentError, "Can't create equal subsets when k=#{k}"
       end
 
