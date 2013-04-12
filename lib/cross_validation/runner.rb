@@ -104,8 +104,7 @@ module CrossValidation
 
         classifier_instance = classifier.call()
 
-        # train it
-        training_samples.each { |doc| training.call(classifier_instance, doc) }
+        train(classifier_instance, training_samples)
 
         # fetch confusion keys
         part.each do |x|
@@ -129,6 +128,12 @@ module CrossValidation
       return nil if valid?
       msg = "The following attribute(s) must be specified: #{errors.join(', ')}"
       fail ArgumentError, msg
+    end
+
+    def train(classifier_instance, samples)
+      samples.each do |doc|
+        training.call(classifier_instance, doc)
+      end
     end
   end
 end
