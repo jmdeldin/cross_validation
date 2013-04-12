@@ -1,4 +1,5 @@
 require_relative '../cross_validation'
+require_relative 'partitioner'
 require_relative 'sample'
 
 module CrossValidation
@@ -96,14 +97,10 @@ module CrossValidation
     def run
       fail_if_invalid
 
-      partitions = documents.each_slice(k).to_a
+      partitions = Partitioner.subset(documents, k)
 
       results = partitions.map.with_index do |part, i|
-        # Array#rotate puts the element i first, so all we have to do is rotate
-        # then remove that element to get the training set. Array#drop does not
-        # mutate the original array either. Array#flatten is needed to coalesce
-        # our list of lists into one list again.
-        training_samples = partitions.rotate(i).drop(1).flatten
+        training_samples = Partitioner.exclude_index(documents, i)
 
         classifier_instance = classifier.call()
 
