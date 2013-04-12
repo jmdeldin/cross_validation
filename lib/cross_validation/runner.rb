@@ -108,7 +108,7 @@ module CrossValidation
 
         # fetch confusion keys
         part.each do |x|
-          prediction = classifying.call(classifier_instance, fetch_sample_value.call(x))
+          prediction = classify(classifier_instance, x)
           matrix.store(prediction, fetch_sample_class.call(x))
         end
       end
@@ -134,6 +134,10 @@ module CrossValidation
       samples.each do |doc|
         training.call(classifier_instance, doc)
       end
+    end
+
+    def classify(classifier_instance, sample)
+      classifying.call(classifier_instance, fetch_sample_value.call(sample))
     end
   end
 end
