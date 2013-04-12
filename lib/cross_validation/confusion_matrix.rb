@@ -34,7 +34,7 @@ module CrossValidation
     # @param [Object] truth   The known, expected value
     # @return [self]
     def store(actual, truth)
-      key = @keys_for.call(actual, truth)
+      key = @keys_for.call(truth, actual)
 
       if @values.key?(key)
         @values[key] += 1

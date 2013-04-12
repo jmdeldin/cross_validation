@@ -32,7 +32,7 @@ class TestConfusionMatrix < MiniTest::Unit::TestCase
   end
 
   def test_store_raises_index_error_on_bad_key
-    bad_keys_for = ->(actual, expected) { :bad }
+    bad_keys_for = ->(expected, actual) { :bad }
     mat = CrossValidation::ConfusionMatrix.new(bad_keys_for)
     assert_raises IndexError do
       mat.store(:ham, :spam)

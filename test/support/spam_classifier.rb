@@ -14,11 +14,11 @@ class SpamClassifier
   # Dummy method for use in testing confusion matrices. Used to determine
   # whether a class is a true positive|negative or a false positive|negative.
   # This is used when configuring a confusion matrix.
-  def self.keys_for(actual, expected)
-    if actual == :spam
-      expected == :spam ? :tp : :fn
-    elsif actual == :ham
-      expected == :ham ? :tn : :fp
+  def self.keys_for(expected, actual)
+    if expected == :spam
+      actual == :spam ? :tp : :fp
+    elsif expected == :ham
+      actual == :ham ? :tn : :fn
     end
   end
 end
