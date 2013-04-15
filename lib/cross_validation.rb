@@ -1,7 +1,7 @@
 $LOAD_PATH.unshift File.dirname(__FILE__)
 
 module CrossValidation
-  VERSION = '0.0.1'
+  VERSION = '0.0.2'
 end
 
 %w(confusion_matrix runner).each do |fn|
