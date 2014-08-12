@@ -1,7 +1,7 @@
 require_relative 'test_helper'
 require_relative '../lib/cross_validation/sample'
 
-class TestSample < MiniTest::Unit::TestCase
+class TestSample < Minitest::Test
   def setup
     @sample = CrossValidation::Sample.new(:spam, :spammy_msg)
   end

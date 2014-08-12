@@ -2,7 +2,7 @@ require_relative 'test_helper'
 require_relative 'support/spam_classifier'
 require_relative '../lib/cross_validation/confusion_matrix'
 
-class TestConfusionMatrix < MiniTest::Unit::TestCase
+class TestConfusionMatrix < Minitest::Test
   def delta
     1e-6
   end

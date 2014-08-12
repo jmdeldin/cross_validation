@@ -19,7 +19,7 @@ def check_dsl(attribute, value)
   }
 end
 
-class TestRunner < MiniTest::Unit::TestCase
+class TestRunner < Minitest::Test
   def setup
     tpl = ['Buy some...', 'Would you like some...']
     @spam = tpl.map { |pfx| CrossValidation::Sample.new(:spam, pfx + 'viagra!') }

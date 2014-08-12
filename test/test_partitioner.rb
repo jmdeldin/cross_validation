@@ -1,7 +1,7 @@
 require_relative 'test_helper'
 require_relative '../lib/cross_validation/partitioner'
 
-class TestPartitioner < MiniTest::Unit::TestCase
+class TestPartitioner < Minitest::Test
   def setup
     @docs = %w(foo bar baz qux)
     @p    = CrossValidation::Partitioner
